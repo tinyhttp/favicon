@@ -1,12 +1,10 @@
 <div align="center">
 
-# repo-template
+# @tinyhttp/favicon
 
 [![npm][npm-img]][npm-url] [![GitHub Workflow Status][gh-actions-img]][github-actions] [![Coverage][cov-img]][cov-url]
 
 </div>
-
-Description.
 
 > A rewrite of [serve-favicon](https://github.com/expressjs/serve-favicon) module.
 
@@ -48,7 +46,7 @@ http.createServer(favicon(path.join(process.cwd(), 'public', 'favicon.ico')).lis
 
 [npm-url]: https://npmjs.com/package/@tinyhttp/favicon
 [github-actions]: https://github.com/tinyhttp/favicon/actions
-[gh-actions-img]: https://img.shields.io/github/workflow/status/tinyhttp/favicon/CI?style=for-the-badge&logo=github&label=
-[cov-img]: https://img.shields.io/coveralls/github/tinyhttp/favicon?style=for-the-badge
+[gh-actions-img]: https://img.shields.io/github/workflow/status/tinyhttp/favicon/CI?style=for-the-badge&logo=github&label=&color=hotpink
+[cov-img]: https://img.shields.io/coveralls/github/tinyhttp/favicon?style=for-the-badge&color=hotpink
 [cov-url]: https://coveralls.io/github/tinyhttp/favicon
-[npm-img]: https://img.shields.io/npm/dt/@tinyhttp/favicon?style=for-the-badge
+[npm-img]: https://img.shields.io/npm/dt/@tinyhttp/favicon?style=for-the-badge&color=hotpink
