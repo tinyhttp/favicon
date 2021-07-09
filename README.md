@@ -41,7 +41,7 @@ import { favicon } from '@tinyhttp/favicon'
 import { createServer } from 'http'
 import path from 'path'
 
-http.createServer(favicon(path.join(process.cwd(), 'public', 'favicon.ico')).listen(3000)
+createServer(favicon(path.join(process.cwd(), 'public', 'favicon.ico')).listen(3000)
 ```
 
 [npm-url]: https://npmjs.com/package/@tinyhttp/favicon
