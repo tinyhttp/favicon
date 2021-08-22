@@ -1,6 +1,6 @@
 {
   "name": "@tinyhttp/favicon",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "module",
   "description": "Node.js middleware to serve `favicon.ico` file, a `serve-favicon` rewrite.",
   "homepage": "https://github.com/tinyhttp/favicon#readme",
