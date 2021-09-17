@@ -1,7 +1,7 @@
 import { eTag } from '@tinyhttp/etag'
 import { fresh } from 'es-fresh'
 import { resolve } from 'path'
-import ms from 'ms'
+import ms, { StringValue } from 'ms'
 import { IncomingMessage as Request, ServerResponse as Response } from 'http'
 import { getPathname } from '@tinyhttp/url'
 import { readFileSync, statSync } from 'fs'
@@ -10,7 +10,7 @@ import { readFileSync, statSync } from 'fs'
  * Favicon options
  */
 export type FaviconOptions = {
-  maxAge?: number | string
+  maxAge?: number | StringValue
 }
 
 /**
@@ -24,7 +24,7 @@ export type FaviconBody = {
 
 const ONE_YEAR_MS = 60 * 60 * 24 * 365 * 1000 // 1 year
 
-const calcMaxAge = (val?: string | number) => {
+const calcMaxAge = (val?: StringValue | number) => {
   const num = typeof val === 'string' ? ms(val) : val
 
   return num != null ? Math.min(Math.max(0, num), ONE_YEAR_MS) : ONE_YEAR_MS
