@@ -46,7 +46,7 @@ createServer(favicon(path.join(process.cwd(), 'public', 'favicon.ico')).listen(3
 
 [npm-url]: https://npmjs.com/package/@tinyhttp/favicon
 [github-actions]: https://github.com/tinyhttp/favicon/actions
-[gh-actions-img]: https://img.shields.io/github/workflow/status/tinyhttp/favicon/CI?style=for-the-badge&logo=github&label=&color=hotpink
+[gh-actions-img]: https://img.shields.io/github/actions/workflow/status/tinyhttp/favicon/ci.yml?style=for-the-badge&logo=github&label=&color=hotpink
 [cov-img]: https://img.shields.io/coveralls/github/tinyhttp/favicon?style=for-the-badge&color=hotpink
 [cov-url]: https://coveralls.io/github/tinyhttp/favicon
 [npm-img]: https://img.shields.io/npm/dt/@tinyhttp/favicon?style=for-the-badge&color=hotpink
