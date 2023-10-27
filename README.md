@@ -38,8 +38,8 @@ Sets `Cache-Control: maxAge=` header, optional. Default is one year. Passed with
 
 ```js
 import { favicon } from '@tinyhttp/favicon'
-import { createServer } from 'http'
-import path from 'path'
+import { createServer } from 'node:http'
+import path from 'node:path'
 
 createServer(favicon(path.join(process.cwd(), 'public', 'favicon.ico')).listen(3000)
 ```

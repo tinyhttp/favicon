@@ -1,19 +1,13 @@
-import { Context, suite, uvu } from 'uvu'
 import { favicon, FaviconOptions } from '../src/index'
-import http from 'http'
-import path from 'path'
-import expect from 'expect'
+import http from 'node:http'
+import path, { dirname } from 'node:path'
 import { makeFetch } from 'supertest-fetch'
-import { join, dirname } from 'path'
-import { fileURLToPath } from 'url'
+import { fileURLToPath } from 'node:url'
+import { describe, it, beforeEach } from 'node:test'
+import { expect } from 'expect'
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
-
-function describe(name: string, fn: (it: uvu.Test<Context>) => void) {
-  const s = suite(name)
-  fn(s)
-  s.run()
-}
 
 const FAVICON_PATH = path.join(process.cwd(), 'tests/fixtures/favicon.ico')
 
@@ -33,7 +27,7 @@ function createServer(path?: string | Buffer, opts?: Omit<FaviconOptions, 'path'
 
 describe('favicon function test', () => {
   describe('args', () => {
-    describe('path', (it) => {
+    describe('path', () => {
       it('should accept buffer', async () => {
         const server = createServer(Buffer.alloc(20))
 
@@ -55,9 +49,9 @@ describe('favicon function test', () => {
       })
     })
 
-    describe('options.maxAge', function (it) {
+    describe('options.maxAge', function () {
       it('should be in cache-control', async () => {
-        const server = createServer(null, { maxAge: 5000 })
+        const server = createServer(null as unknown as string, { maxAge: 5000 })
         await makeFetch(server)('/favicon.ico').expect('Cache-Control', 'public, max-age=5').expect(200)
       })
 
@@ -69,25 +63,25 @@ describe('favicon function test', () => {
       })
 
       it('should accept 0', async () => {
-        const server = createServer(null, { maxAge: 0 })
+        const server = createServer(null as unknown as string, { maxAge: 0 })
         await makeFetch(server)('/favicon.ico').expect('Cache-Control', 'public, max-age=0').expect(200)
       })
 
       it('should accept string', async () => {
-        const server = createServer(null, { maxAge: '30d' })
+        const server = createServer(null as unknown as string, { maxAge: '30d' })
         await makeFetch(server)('/favicon.ico').expect('Cache-Control', 'public, max-age=2592000').expect(200)
       })
 
       it('should be valid delta-seconds', async () => {
-        const server = createServer(null, { maxAge: 1234 })
+        const server = createServer(null as unknown as string, { maxAge: 1234 })
         await makeFetch(server)('/favicon.ico').expect('Cache-Control', 'public, max-age=1').expect(200)
       })
     })
 
-    describe('requests', (it) => {
+    describe('requests', () => {
       let server: http.Server
 
-      it.before.each(() => {
+      beforeEach(() => {
         server = createServer()
       })
 
@@ -128,7 +122,7 @@ describe('favicon function test', () => {
 
         await makeFetch(server)('/favicon.ico', {
           headers: {
-            'If-None-Match': res.headers.get('etag')
+            'If-None-Match': res.headers.get('etag') as string
           }
         }).expect(304)
       })
@@ -152,7 +146,7 @@ describe('favicon function test', () => {
     })
 
     describe('icon', function () {
-      describe('buffer', (it) => {
+      describe('buffer', () => {
         it('should be served from buffer', async () => {
           const buffer = Buffer.alloc(20, '#')
           const server = createServer(buffer)

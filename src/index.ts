@@ -1,10 +1,45 @@
 import { eTag } from '@tinyhttp/etag'
 import { fresh } from 'es-fresh'
-import { resolve } from 'path'
-import ms, { StringValue } from 'ms'
-import { IncomingMessage as Request, ServerResponse as Response } from 'http'
+import { resolve } from 'node:path'
+import type { IncomingMessage, ServerResponse } from 'node:http'
 import { getPathname } from '@tinyhttp/url'
-import { readFileSync, statSync } from 'fs'
+import { readFileSync, statSync } from 'node:fs'
+
+type Unit =
+  | 'Years'
+  | 'Year'
+  | 'Yrs'
+  | 'Yr'
+  | 'Y'
+  | 'Weeks'
+  | 'Week'
+  | 'W'
+  | 'Days'
+  | 'Day'
+  | 'D'
+  | 'Hours'
+  | 'Hour'
+  | 'Hrs'
+  | 'Hr'
+  | 'H'
+  | 'Minutes'
+  | 'Minute'
+  | 'Mins'
+  | 'Min'
+  | 'M'
+  | 'Seconds'
+  | 'Second'
+  | 'Secs'
+  | 'Sec'
+  | 's'
+  | 'Milliseconds'
+  | 'Millisecond'
+  | 'Msecs'
+  | 'Msec'
+  | 'Ms'
+
+type UnitAnyCase = Unit | Uppercase<Unit> | Lowercase<Unit>
+type StringValue = `${number}` | `${number}${UnitAnyCase}` | `${number} ${UnitAnyCase}`
 
 /**
  * Favicon options
@@ -20,6 +55,29 @@ export type FaviconOptions = {
 export type FaviconBody = {
   body: Buffer
   headers: Record<string, string>
+}
+
+const ms = (val?: StringValue | number): number | undefined => {
+  if (typeof val === 'string') {
+    const match = val.match(/^(\d+)([a-z]+)$/i)
+    if (match) {
+      const [, num, unit] = match
+      const milliseconds = {
+        ms: 1,
+        s: 1000,
+        m: 60000,
+        h: 3600000,
+        d: 86400000,
+        w: 604800000,
+        y: 31536000000
+      }
+      const multiplier = milliseconds[unit.toLowerCase()]
+      if (multiplier) {
+        return parseInt(num, 10) * multiplier
+      }
+    }
+  }
+  return val as number | undefined
 }
 
 const ONE_YEAR_MS = 60 * 60 * 24 * 365 * 1000 // 1 year
@@ -47,10 +105,10 @@ function createIsDirError(path: string) {
   return error
 }
 
-const isFresh = (req: Request, res: Response) =>
+const isFresh = (req: IncomingMessage, res: ServerResponse) =>
   fresh(req.headers, {
-    etag: res.getHeader('ETag'),
-    'last-modified': res.getHeader('Last-Modified')
+    etag: res.getHeader('ETag') as string,
+    'last-modified': res.getHeader('Last-Modified') as string
   })
 
 function resolveSync(iconPath: string) {
@@ -62,7 +120,7 @@ function resolveSync(iconPath: string) {
   return path
 }
 
-function send(req: Request, res: Response, icon: FaviconBody) {
+function send(req: IncomingMessage, res: ServerResponse, icon: FaviconBody) {
   // Set headers
   const headers = icon.headers
   const keys = Object.keys(headers)
@@ -94,7 +152,7 @@ export function favicon(path: string | Buffer, options?: FaviconOptions) {
   if (Buffer.isBuffer(path)) icon = createIcon(Buffer.from(path), maxAge)
   else if (typeof path === 'string') path = resolveSync(path)
 
-  return function favicon(req: Request, res: Response, next?: (err?: any) => void) {
+  return function favicon(req: IncomingMessage, res: ServerResponse, next?: (err?: any) => void) {
     if (getPathname(req.url) !== '/favicon.ico') return next?.()
 
     if (req.method !== 'GET' && req.method !== 'HEAD') {
